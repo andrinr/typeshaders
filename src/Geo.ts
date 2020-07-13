@@ -27,8 +27,7 @@ export default class Geo {
   update(program: WebGLProgram) {
     const attribLocation = this.gl.getAttribLocation(program, 'aPosition');
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
-    this.gl.vertexAttribPointer(
-      attribLocation, this.dimensions, this.gl.FLOAT, false, 0, 0);
+    this.gl.vertexAttribPointer(attribLocation, this.dimensions, this.gl.FLOAT, false, 0, 0);
 
     this.gl.enableVertexAttribArray(attribLocation);
     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vertices.length / this.dimensions);

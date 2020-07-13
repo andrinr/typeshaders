@@ -12,8 +12,8 @@ export interface ITime {
 }
 
 export interface IDimensions {
-  size: number[],
-  aspectRatio: number
+  size: number[];
+  aspectRatio: number;
 }
 
 /**
@@ -45,7 +45,5 @@ export default abstract class Scene {
   onResize() {}
 
   /* tslint:disable:no-empty */
-  onMouseMove(pos: number[], vel: number[]) {
-
-  }
+  onMouseMove(pos: number[], vel: number[]) {}
 }

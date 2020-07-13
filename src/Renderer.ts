@@ -7,16 +7,15 @@ import Shader, { EShaderTypes, EUniformTypes } from './Shader';
 import FBO from './FBO';
 import Manager from './Manager';
 
-
 export interface IRendererProps {
-  vertex: Shader,
-  fragment: Shader,
-  geo: Geo,
-  fbo?: FBO,
-  autoFeedback?: boolean,
-  clearColor?: number[],
-  fixedSize?: number[],
-  iterations?: number,
+  vertex: Shader;
+  fragment: Shader;
+  geo: Geo;
+  fbo?: FBO;
+  autoFeedback?: boolean;
+  clearColor?: number[];
+  fixedSize?: number[];
+  iterations?: number;
 }
 
 /**
@@ -39,14 +38,13 @@ export default class Renderer {
    * Called by the user
    * @param properties
    */
-  constructor(properties : IRendererProps) {
+  constructor(properties: IRendererProps) {
     if (properties.vertex.type !== EShaderTypes.vertex || properties.fragment.type !== EShaderTypes.fragment)
-      throw  new Error('Renderer - vertex or fragment shader is not of correct type');
+      throw new Error('Renderer - vertex or fragment shader is not of correct type');
 
     this.clearColor = properties.clearColor || [0, 0, 0, 1];
 
-    if (this.clearColor.length !== 4)
-      throw new Error('Renderer - clearColor is not an array of length 4 (RGBA)');
+    if (this.clearColor.length !== 4) throw new Error('Renderer - clearColor is not an array of length 4 (RGBA)');
 
     this.geo = properties.geo;
     this.vertex = properties.vertex;
@@ -60,7 +58,7 @@ export default class Renderer {
   /**
    * Called by the Manager class
    */
-  public initialize(manager: Manager, usesFBO: boolean): Renderer{
+  public initialize(manager: Manager, usesFBO: boolean): Renderer {
     this.manager = manager;
 
     this.vertex.compileShader(this.manager.gl);
@@ -75,29 +73,23 @@ export default class Renderer {
     if (!this.manager.gl.getProgramParameter(this.program, this.manager.gl.LINK_STATUS))
       throw new Error(`Error linking shader program ${this.manager.gl.getProgramInfoLog(this.program)}`);
 
-    if (usesFBO && !this.fbo)
-      this.fbo = new FBO(this.manager, this.autoFeedback, this.autoFeedback);
+    if (usesFBO && !this.fbo) this.fbo = new FBO(this.manager, this.autoFeedback, this.autoFeedback);
 
     return this;
   }
 
   get output() {
-    if (this.fbo)
-      return this.fbo.output();
-    else
-      throw new Error('Renderer.output - this a default renderer and thus directly renders to the canvas object.');
+    if (this.fbo) return this.fbo.output();
+    else throw new Error('Renderer.output - this a default renderer and thus directly renders to the canvas object.');
   }
 
   update(): Renderer {
     this.manager.gl.disable(this.manager.gl.BLEND);
 
-    for (let i = 0; i < this.iterations; i++){
+    for (let i = 0; i < this.iterations; i++) {
       // the framebuffer null is the canvas object
-      if (!this.fbo)
-        this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, null);
-
-      else
-        this.fbo.update();
+      if (!this.fbo) this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, null);
+      else this.fbo.update();
 
       this.manager.gl.clearColor(this.clearColor[0], this.clearColor[1], this.clearColor[2], this.clearColor[3]);
       this.manager.gl.clear(this.manager.gl.COLOR_BUFFER_BIT);
@@ -122,23 +114,22 @@ export default class Renderer {
     return this;
   }
 
-  setSize(size: number[]){
+  setSize(size: number[]) {
     this.fixedSize = size;
   }
 
-  onResize(){
+  onResize() {
     const width = this.fixedSize ? this.fixedSize[0] : this.manager.canvasElement.getBoundingClientRect().width;
     const height = this.fixedSize ? this.fixedSize[1] : this.manager.canvasElement.getBoundingClientRect().height;
     this.manager.canvasElement.width = width;
     this.manager.canvasElement.height = height;
-    this.manager.gl.viewport(0,0, width, height);
-    if (this.fbo)
-        this.fbo.onResize([width,height]);
+    this.manager.gl.viewport(0, 0, width, height);
+    if (this.fbo) this.fbo.onResize([width, height]);
   }
 
   private setShaderUniforms(shader: Shader) {
     const gl = this.manager.gl;
-    let textInd = (this.fbo && this.autoFeedback) ? 1 : 0;
+    let textInd = this.fbo && this.autoFeedback ? 1 : 0;
 
     for (const item of shader.uniforms) {
       const location = gl.getUniformLocation(this.program, item.name);
@@ -146,27 +137,27 @@ export default class Renderer {
       if (item.source) {
         const source = typeof item.source === 'function' ? item.source() : item.source;
         switch (item.type) {
-          case EUniformTypes.f :
+          case EUniformTypes.f:
             gl.uniform1f(location, source);
             break;
-          case EUniformTypes.i :
+          case EUniformTypes.i:
             gl.uniform1i(location, source);
             break;
-          case EUniformTypes.f1 :
+          case EUniformTypes.f1:
             gl.uniform1fv(location, source);
             break;
-          case EUniformTypes.f2 :
+          case EUniformTypes.f2:
             gl.uniform2fv(location, source);
             break;
-          case EUniformTypes.f3 :
+          case EUniformTypes.f3:
             gl.uniform3fv(location, source);
             break;
-          case EUniformTypes.f4 :
+          case EUniformTypes.f4:
             gl.uniform4fv(location, source);
             break;
-          case EUniformTypes.tex :
+          case EUniformTypes.tex:
             gl.uniform1i(location, textInd);
-            gl.activeTexture(gl.TEXTURE0 +textInd++);
+            gl.activeTexture(gl.TEXTURE0 + textInd++);
             gl.bindTexture(gl.TEXTURE_2D, source);
             break;
         }

@@ -4,12 +4,18 @@
  */
 
 export enum EUniformTypes {
-  'f','i','f1', 'f2', 'f3', 'f4', 'tex'
+  'f',
+  'i',
+  'f1',
+  'f2',
+  'f3',
+  'f4',
+  'tex',
 }
 
 export enum EShaderTypes {
   'vertex',
-  'fragment'
+  'fragment',
 }
 
 export interface IUniform {
@@ -33,8 +39,7 @@ export default class Shader {
   constructor(codeString: string, type: EShaderTypes, uniforms?: IUniform[]) {
     this.codeString = codeString;
     this.type = type;
-    if (uniforms)
-      this.uniforms = uniforms;
+    if (uniforms) this.uniforms = uniforms;
   }
 
   compileShader(context: WebGLRenderingContext) {

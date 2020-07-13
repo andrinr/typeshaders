@@ -6,15 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andrinr/typeshaders.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["shader", "WebGL", "typescript", "animation"],
+  "author": "Andrin Rehmann",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/andrinr/typeshaders/issues"
