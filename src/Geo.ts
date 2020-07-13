@@ -6,7 +6,7 @@
 /**
  * The geo class handles geometry
  */
-export default class Geo {
+export class Geo {
   vertices: Float32Array;
   vertexBuffer: WebGLBuffer;
   gl: WebGLRenderingContext;

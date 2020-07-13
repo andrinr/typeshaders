@@ -4,12 +4,12 @@
  *
  */
 
-import Manager from './Manager';
+import {Manager} from './Manager';
 
 /**
  * Creates a framebuffer object
  */
-export default class FBO {
+export class FBO {
   frameBuffer: WebGLFramebuffer;
   protected manager: Manager;
   protected feedback: boolean;

@@ -30,7 +30,7 @@ export interface IUniform {
  * If a feedback loop is desired, the uniform variable of type sampler2D needs
  * to be present and on top of the other sampler2D variables.
  */
-export default class Shader {
+export class Shader {
   codeString: string;
   glShader: WebGLShader;
   uniforms: IUniform[];

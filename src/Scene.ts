@@ -2,8 +2,8 @@
  * WebGL typescript integration for shaders
  * Andrin Rehmann 2020
  */
-import Renderer from './Renderer';
-import Manager from './Manager';
+import {Renderer} from './Renderer';
+import {Manager} from './Manager';
 
 export interface ITime {
   frameCount: number;
@@ -19,7 +19,7 @@ export interface IDimensions {
 /**
  * The parent class for all scenes
  */
-export default abstract class Scene {
+export abstract class Scene {
   /**
    *  renderers[n-1] is the default renderer which renders to the canvas, all others will render to a fbo
    */

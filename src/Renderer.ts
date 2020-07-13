@@ -2,10 +2,10 @@
  * WebGL typescript integration for shaders
  * Andrin Rehmann 2020
  */
-import Geo from './Geo';
-import Shader, { EShaderTypes, EUniformTypes } from './Shader';
-import FBO from './FBO';
-import Manager from './Manager';
+import {Geo} from './Geo';
+import {Shader, EShaderTypes, EUniformTypes } from './Shader';
+import {FBO} from './FBO';
+import {Manager} from './Manager';
 
 export interface IRendererProps {
   vertex: Shader;
@@ -21,7 +21,7 @@ export interface IRendererProps {
 /**
  * The render class creates a webgl program from a pair of shaders
  */
-export default class Renderer {
+export class Renderer {
   vertex: Shader;
   fragment: Shader;
   program: WebGLProgram;

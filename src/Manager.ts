@@ -1,12 +1,12 @@
 /**
  * The manager controls the scene and initiates the webgl rendering context
  */
-import Shader, { EShaderTypes, EUniformTypes } from './Shader';
-import Geo from './Geo';
-import Renderer from './Renderer';
-import Scene from './Scene';
+import {Shader, EShaderTypes, EUniformTypes } from './Shader';
+import {Geo} from './Geo';
+import {Renderer} from './Renderer';
+import {Scene} from './Scene';
 
-export default class Manager {
+export class Manager {
   canvasElement: HTMLCanvasElement;
   gl: WebGLRenderingContext;
 
@@ -166,7 +166,6 @@ export default class Manager {
   }
 
   onResize() {
-    // console.log("Manager.onResize : Resize event");
     if (this.scene) {
       // CPU updates before GPU updates
       this.scene.onResize();
@@ -180,7 +179,6 @@ export default class Manager {
   }
 
   onMouseMove(event: MouseEvent) {
-    // console.log("Manager.onMouseMove : Mouse event detected");
     if (this.scene) {
       const rect: DOMRect = this.canvasElement.getBoundingClientRect();
       // calculate relative mouse position to canvas element
