@@ -19,7 +19,7 @@ export interface IDimensions {
 /**
  * The parent class for all scenes
  */
-export abstract class Scene {
+export class Scene {
   /**
    *  renderers[n-1] is the default renderer which renders to the canvas, all others will render to a fbo
    */
@@ -29,7 +29,7 @@ export abstract class Scene {
 
   protected manager: Manager;
 
-  protected constructor(manager: Manager) {
+  constructor(manager: Manager) {
     this.manager = manager;
     this.renderers = [];
     this.manager.set(this);
