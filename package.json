@@ -1,6 +1,6 @@
 {
   "name": "typeshaders",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "WebGL shader playground in Typescript",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/andrinr/typeshaders.git"
   },
-  "keywords": ["shader", "WebGL", "typescript", "animation"],
+  "keywords": [
+    "shader",
+    "WebGL",
+    "typescript",
+    "animation"
+  ],
   "author": "Andrin Rehmann",
   "license": "ISC",
   "bugs": {
