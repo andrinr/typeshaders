@@ -20,15 +20,13 @@ export default class Manager {
   protected startTime: number;
 
   protected scene: Scene;
-  protected shaderRoot: string | undefined;
 
   /**
    * @param divName Requires the name of the canvas gl object in order to access it
    * @param shaderRoot Root of shader files. Use .glsl
    */
-  constructor(divName: string, shaderRoot?: string, scaling?: number) {
+  constructor(divName: string) {
     this.canvasElement = document.getElementById(divName) as HTMLCanvasElement;
-    this.shaderRoot = shaderRoot;
     this.active = true;
     const params = { alpha: false, depth: false, stencil: false, antialias: false };
     this.gl = this.canvasElement.getContext('webgl', params) as WebGLRenderingContext;
