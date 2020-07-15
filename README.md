@@ -8,6 +8,10 @@ and there will be major changes and added examples in the future.
 
 ## Get started
 
+#### 0. Installation
+
+```npm i typeshaders```
+
 #### 1. Create a canvas object 
 
 Make sure to add a custom id to the object. 
@@ -107,7 +111,7 @@ to have no FBO object attached and will automatically render to the canvas objec
 
 ##### 3.3 Feedback loops
 
-If we need a feedback loop, again we need to set autoFeedback to true.
+If we need a feedback loop, we need to set autoFeedback parameter of the specific Renderer to true.
 Also inside the fragment shader the very first sampler2D variable needs to be called
 *feedback*.
 
@@ -131,7 +135,7 @@ void main() {
 
 ##### 3.4 FBO's
 
-Again inside the scene class we can create a FBO.
+Inside the scene class we can create a FBO as following:
 ````typescript
 const fbo1 = new FBO(this.manager, true)
 ````
