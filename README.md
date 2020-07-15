@@ -8,6 +8,8 @@ and there will be major changes and added examples in the future.
 
 ## Get started
 
+#### 0. Installation
+
 ```npm i typeshaders```
 
 #### 1. Create a canvas object 
