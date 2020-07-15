@@ -80,7 +80,7 @@ new Shader(
 
 ##### 3.2 Create a new Renderer
 
-Each ``Renderer`` consists of a fragment shader, vertex shader, geometry object and
+A scene can have several renderers, which are all pushed into the ``renderers`` array. Each ``Renderer`` consists of a fragment shader, vertex shader, geometry object and
 optionally a ``FBO`` (frameBufferObject). Optionally one can set the number of iterations
 the program will be run in each frame. In case the shader requires a feedback loop,
 we can set ``autoFeedback`` to true.
@@ -90,10 +90,10 @@ start(){
     this.renderers.push(
         new Renderer(
             {
-                vertex: VertexSahderObject,
-                fragment: FragmentShaderObject,
-                geo: GeometryShaderObject,
-                fbo: FrameBufferObject,
+                vertex: Shader,
+                fragment: Shader,
+                geo: Geometry,
+                fbo: FBO,
                 iterations: 1,
                 autoFeedback: false
             }
@@ -156,9 +156,9 @@ We can then pass this ``FBO`` to a ``Renderer``:
 ````typescript
 new Renderer(
     {
-        vertex: VertexSahderObject,
-        fragment: FragmentShaderObject,
-        geo: GeometryShaderObject,
+        vertex: Shader,
+        fragment: Shader,
+        geo: Geometry,
         fbo: fbo1,
         iterations: 1,
         autoFeedback: true
