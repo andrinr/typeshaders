@@ -23,10 +23,10 @@ The shader will be rendered on this canvas.
 
 #### 2. Create a new manager
 
-Pass the custom id to the manager.
+Pass the custom id to the ``Manager``.
 
-The manager function will handle the animation frames, as well as the scene
-and its corresponding renderers. 
+The ``Manager`` function will handle the animation frames, as well as the ``Scene``
+and its corresponding ``Renderer``'s. 
 
 ````typescript
 const manager = new Manager("canvasID");
@@ -34,11 +34,11 @@ const manager = new Manager("canvasID");
 
 #### 3. Create a new Scene
 
-Implement the start and if desired the update class. 
-The start function is called when the Scene is initialized, 
-the update function is called once in each frame. 
+Implement the ``start`` and if desired the ``update`` method. 
+The ``start`` function is called when the Scene is initialized, 
+the ``update`` function is called once in each frame. 
 
-Don't override the constructor and use the start function,
+Don't override the constructor and use the ``start`` function,
 unless you know what you are doing.
 
 ````typescript
@@ -56,8 +56,8 @@ class myScene extends Scene{
 
 ##### 3.1 Create a new Shader
 
-Each shader requires a codestring, shadertype and a unifrom array.
-The name of the uniform object needs to be written just as in the shader.
+Each ``Shader`` requires a codestring, shadertype and an array containing the required ``IUniform`` objects. 
+The name of the uniform object needs to be written just as in the codestring describing the shader.
 ````typescript
 new Shader(
     `
@@ -80,10 +80,10 @@ new Shader(
 
 ##### 3.2 Create a new Renderer
 
-Each renderer consists of a fragment shader, vertex shader, geometry object and
-optionally a FBO (frameBufferObject). Optionally one can set the number of iterations
-the program will be run in each frame. Also if the shader requires a feedback loop,
-we can set autoFeedback to true.
+Each ``Renderer`` consists of a fragment shader, vertex shader, geometry object and
+optionally a ``FBO`` (frameBufferObject). Optionally one can set the number of iterations
+the program will be run in each frame. In case the shader requires a feedback loop,
+we can set ``autoFeedback`` to true.
 
 ````typescript
 start(){
@@ -104,18 +104,19 @@ start(){
 
 In most cases we only want to render on a plain 2D plane. 
 In that case we can simply use the ``baseVertexShader`` and ``baseGeo``
-which can be found inside the Manger class.
+which can be found inside the ``Manger`` class.
 
-**IMPORTANT:** the last element of the renderers array is expected
-to have no FBO object attached and will automatically render to the canvas object. 
+**IMPORTANT:** the last element of the ``renderers`` array is expected
+to have no ``FBO`` object attached and will automatically render to the canvas object. 
 
 ##### 3.3 Feedback loops
 
-If we need a feedback loop, we need to set autoFeedback parameter of the specific Renderer to true.
-Also inside the fragment shader the very first sampler2D variable needs to be called
-*feedback*.
+To create a feedback loop, we need to set ``autoFeedback`` parameter of the specific ``Renderer`` to true.
+Furthermore inside the fragment shader the very first sampler2D variable needs to be called
+*feedback*. *Typeshaders* uses a ping pong technique where each ``FBO`` object has two textures, which are
+alternately associated the role of the read and write texture. 
 
-A standart fragment shader which can used along the ``baseVertexShader``
+A standard fragment shader which can used along the ``baseVertexShader``
 looks like this:
 
 ````glsl
@@ -135,27 +136,37 @@ void main() {
 
 ##### 3.4 FBO's
 
-Inside the scene class we can create a FBO as following:
+Inside the ``Scene`` class we can create a ``FBO`` as following:
 ````typescript
 const fbo1 = new FBO(this.manager, true)
 ````
 
-We can then pass this FBO to a renderer:
+The second parameter enables the feedback inside the ``FBO``. 
+
+The reason for differentiation between the two variables: 
+``autoFeedback`` of the ``Renderer`` class and ``feedback`` of the ``FBO`` class is as follows:
+
+There are certain scenarios where we want to have the possibility of a feedback loop, but not 
+make use of it in each frame. Then one would set ``àutoFeedback`` to false, ``feedback`` to true,
+and manually swap the ``FBO`` write and read textures. We can for example simply call ``FBO.output(true)``
+to get the output of the ``FBO`` object and swap the textures. 
+
+We can then pass this ``FBO`` to a ``Renderer``:
 
 ````typescript
 new Renderer(
-            {
-                vertex: VertexSahderObject,
-                fragment: FragmentShaderObject,
-                geo: GeometryShaderObject,
-                fbo: fbo1,
-                iterations: 1,
-                autoFeedback: true
-            }
-        )   
+    {
+        vertex: VertexSahderObject,
+        fragment: FragmentShaderObject,
+        geo: GeometryShaderObject,
+        fbo: fbo1,
+        iterations: 1,
+        autoFeedback: true
+    }
+)   
 ````
 
-And use the output of the fbo as a uniform for a fragment shader:
+And use the output of the ``FBO`` as a uniform for a fragment shader:
 
 ````typescript
 new Shader(
