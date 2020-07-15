@@ -8,6 +8,8 @@ and there will be major changes and added examples in the future.
 
 ## Get started
 
+```npm i typeshaders```
+
 #### 1. Create a canvas object 
 
 Make sure to add a custom id to the object. 
