@@ -157,6 +157,11 @@ And use the output of the fbo as a uniform for a fragment shader:
 new Shader(
     `
     precision mediump float;
+    varying vec2 vUv;
+    varying vec2 vL;
+    varying vec2 vR;
+    varying vec2 vT;
+    varying vec2 vB;
     
     uniform sampler2D feedback;
     uniform sampler2D fbo1;
@@ -170,7 +175,7 @@ new Shader(
       {
         name: 'fbo1',
         source: () => fbo1.output(),
-        type: EUniformTypes.f4
+        type: EUniformTypes.tex
       }
     ] 
 )
