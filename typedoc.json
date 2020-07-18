@@ -1,12 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "declaration": true,
-    "outDir": "./lib",
-    "strict": false
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+
+  "inputFiles": ["./src"],
+  "mode": "modules",
+  "out": "docs"
+
 }
 
