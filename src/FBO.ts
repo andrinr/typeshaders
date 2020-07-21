@@ -64,7 +64,7 @@ export class FBO {
       this.manager.gl.CLAMP_TO_EDGE,
     );
 
-    const precision =
+    const format =
       this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).RGBA16F : this.manager.gl.RGBA;
 
     const type =
@@ -74,11 +74,11 @@ export class FBO {
     this.manager.gl.texImage2D(
       this.manager.gl.TEXTURE_2D,
       0,
-      this.manager.gl.RGBA,
+      format,
       size[0],
       size[1],
       0,
-      precision,
+      format,
       type,
       null,
     );
