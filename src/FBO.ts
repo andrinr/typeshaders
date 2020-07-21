@@ -65,7 +65,7 @@ export class FBO {
     );
 
     const format =
-      this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).RGBA16F : this.manager.gl.RGBA;
+      this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).RGBA : this.manager.gl.RGBA;
 
     const type =
       this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).FLOAT : this.manager.gl.UNSIGNED_BYTE;
