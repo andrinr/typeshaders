@@ -6,15 +6,6 @@
 
 import {Manager} from './Manager';
 
-enum EPrecision {
-
-}
-
-export interface IFBOProps{
-  feedback: boolean;
-  autoSwap: boolean;
-  desiredPrecision: EPrecision;
-}
 /**
  * Creates a framebuffer object
  */
