@@ -74,12 +74,12 @@ export class FBO {
     this.manager.gl.texImage2D(
       this.manager.gl.TEXTURE_2D,
       0,
-      format,
+      this.manager.gl.RGBA,
       size[0],
       size[1],
       0,
-      format,
-      type,
+      this.manager.gl.RGBA,
+      this.manager.gl.UNSIGNED_BYTE,
       null,
     );
     this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, null);
