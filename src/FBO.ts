@@ -6,6 +6,15 @@
 
 import {Manager} from './Manager';
 
+enum EPrecision {
+
+}
+
+export interface IFBOProps{
+  feedback: boolean;
+  autoSwap: boolean;
+  desiredPrecision: EPrecision;
+}
 /**
  * Creates a framebuffer object
  */
@@ -63,6 +72,10 @@ export class FBO {
       this.manager.gl.TEXTURE_WRAP_T,
       this.manager.gl.CLAMP_TO_EDGE,
     );
+
+    const precision =
+      this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).RGBA16F : this.manager.gl.RGBA;
+
     this.manager.gl.texImage2D(
       this.manager.gl.TEXTURE_2D,
       0,
@@ -70,7 +83,7 @@ export class FBO {
       size[0],
       size[1],
       0,
-      this.manager.gl.RGBA,
+      precision,
       this.manager.gl.UNSIGNED_BYTE,
       null,
     );
@@ -123,7 +136,7 @@ export class FBO {
 
   /**
    * Access current read texture, since output is called after update
-   * @param swap If swap is true, textures are swapped before
+   * @param swap If swap is true, textures are swapped before getting the current read texture
    */
   output(swap?: boolean): WebGLTexture {
     if (swap && !this.autoSwap) this.swap();
@@ -133,7 +146,7 @@ export class FBO {
   }
 
   /**
-   * Swap textures, I'm not sure if this method or the method of having two fbos is faster
+   * Swap textures
    */
   swap() {
     this.write = ++this.write % 2;

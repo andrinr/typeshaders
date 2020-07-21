@@ -12,6 +12,10 @@ export class Geo {
   gl: WebGLRenderingContext;
   dimensions: number;
 
+  /**
+   * Pass a vertex list to create the geometry object
+   * @param vertices
+   */
   constructor(vertices: number[]) {
     this.vertices = new Float32Array(vertices);
   }

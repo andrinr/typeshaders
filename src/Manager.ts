@@ -1,11 +1,11 @@
-/**
- * The manager controls the scene and initiates the webgl rendering context
- */
 import {Shader, EShaderTypes, EUniformTypes } from './Shader';
 import {Geo} from './Geo';
 import {Renderer} from './Renderer';
 import {Scene} from './Scene';
 
+/**
+ * The manager controls the scene and initiates the webgl rendering context
+ */
 export class Manager {
   canvasElement: HTMLCanvasElement;
   gl: WebGLRenderingContext;
@@ -14,6 +14,8 @@ export class Manager {
   copyFragmentShader: Shader;
   baseGeo: Geo;
   copyRenderer: Renderer;
+
+  webGL2IsSupported : boolean;
 
   protected prevMousePos: number[];
   protected active: boolean;
@@ -29,7 +31,20 @@ export class Manager {
     this.canvasElement = document.getElementById(divName) as HTMLCanvasElement;
     this.active = true;
     const params = { alpha: false, depth: false, stencil: false, antialias: false };
-    this.gl = this.canvasElement.getContext('webgl', params) as WebGLRenderingContext;
+
+    this.gl = this.canvasElement.getContext('webgl2', params) as WebGL2RenderingContext;
+    this.webGL2IsSupported = true;
+
+    // Fallback 1, webgl1
+    if (!this.gl){
+      this.gl = this.canvasElement.getContext('webgl', params) as WebGLRenderingContext;
+      this.webGL2IsSupported = false;
+    }
+
+    // Throw error when to webgl is supported
+    if (!this.gl){
+      throw new Error("WebGL not supported!")
+    }
 
     // bindings
     this.onResize = this.onResize.bind(this);
@@ -46,7 +61,11 @@ export class Manager {
     // Basic vertex shader which simply passes the vertices to the fragment shader
     this.baseVertexShader = new Shader(
       `
+      #ifdef GL_FRAGMENT_PRECISION_HIGH
       precision highp float;
+      #else
+      precision mediump float;
+      #endif
       attribute vec2 aPosition;
       varying vec2 vUv;
       varying vec2 vL;
