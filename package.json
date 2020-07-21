@@ -1,6 +1,6 @@
 {
   "name": "typeshaders",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "WebGL shader playground in Typescript",
   "main": "index.js",
   "scripts": {
