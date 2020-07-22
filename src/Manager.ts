@@ -158,7 +158,13 @@ export class Manager {
     for (let i = 0; i < this.scene.renderers.length - 1; i++) this.scene.renderers[i].initialize(this, true);
 
     // last element in list will render to the canvas, thus doesn't need an fbo
-    this.scene.renderers[this.scene.renderers.length - 1].initialize(this, false);
+
+    if (this.scene.renderers.length > 0)
+      this.scene.renderers[this.scene.renderers.length - 1].initialize(this, false);
+
+    else
+      throw new Error("Scene renderer array is empty!");
+
 
     this.onResize();
     this.scene.onResize();
