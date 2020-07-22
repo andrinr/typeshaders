@@ -39,14 +39,15 @@ export class Manager {
     if (!this.gl){
       this.gl = this.canvasElement.getContext('webgl', params) as WebGLRenderingContext;
       this.webGL2IsSupported = false;
+
+      // https://developer.mozilla.org/en-US/docs/Web/API/OES_texture_float
+      this.gl.getExtension('OES_texture_float');
     }
 
     // Throw error when to webgl is supported
-    if (!this.gl){
-      throw new Error("WebGL not supported!")
-    }
+    if (!this.gl)
+      throw new Error("WebGL not supported!");
 
-    this.gl.getExtension('OES_texture_float');
 
     // bindings
     this.onResize = this.onResize.bind(this);

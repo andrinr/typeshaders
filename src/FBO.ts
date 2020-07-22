@@ -64,10 +64,7 @@ export class FBO {
       this.manager.gl.CLAMP_TO_EDGE,
     );
 
-    const format =
-      this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).RGBA16F : this.manager.gl.RGBA;
-
-
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
     this.manager.gl.texImage2D(
       this.manager.gl.TEXTURE_2D,
       0,
