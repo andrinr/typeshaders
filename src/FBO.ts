@@ -65,10 +65,7 @@ export class FBO {
     );
 
     const format =
-      this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).RGBA : this.manager.gl.RGBA;
-
-    const type =
-      this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).FLOAT : this.manager.gl.UNSIGNED_BYTE;
+      this.manager.webGL2IsSupported ? (this.manager.gl as WebGL2RenderingContext).RGBA16F : this.manager.gl.RGBA;
 
 
     this.manager.gl.texImage2D(
@@ -79,7 +76,7 @@ export class FBO {
       size[1],
       0,
       this.manager.gl.RGBA,
-      this.manager.gl.UNSIGNED_BYTE,
+      this.manager.gl.FLOAT,
       null,
     );
     this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, null);

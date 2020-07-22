@@ -46,6 +46,8 @@ export class Manager {
       throw new Error("WebGL not supported!")
     }
 
+    this.gl.getExtension('OES_texture_float');
+
     // bindings
     this.onResize = this.onResize.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);

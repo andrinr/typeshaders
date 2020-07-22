@@ -11,6 +11,7 @@ test('Initialisation', () => {
 
   const scene = new TestScene(manager);
 
+  //expect(manager.gl.getError()).toBe(manager.gl.NO_ERROR);
 });
 
 
