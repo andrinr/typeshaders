@@ -108,10 +108,11 @@ export class FBO {
       this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, this.frameBuffer);
       this.textures[this.write] = this.manager.copyRenderer.output;
       this.textures[this.read] = this.createTexture(size);
-    } else this.textures[this.write] = this.createTexture(size);
+    }
     /**
      * If there is no feedback, no data can be lost
      */
+    else this.textures[this.write] = this.createTexture(size);
 
     this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, this.frameBuffer);
     this.manager.gl.framebufferTexture2D(
