@@ -44,6 +44,8 @@ export class Manager {
       this.gl.getExtension('OES_texture_float');
     }
 
+    this.gl.getExtension('EXT_color_buffer_float');
+
     // Throw error when to webgl is supported
     if (!this.gl)
       throw new Error("WebGL not supported!");
