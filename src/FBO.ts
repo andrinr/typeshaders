@@ -69,11 +69,11 @@ export class FBO {
       gl.CLAMP_TO_EDGE,
     );
 
-    const internalFormat = this.manager.webGL2IsSupported ? gl2.RGBA16F : gl.RGBA;
+    const internalFormat =  gl.RGBA; //this.manager.webGL2IsSupported ? gl2.RGBA16F : gl.RGBA;
 
     const format = gl.RGBA;
 
-    const type = this.manager.webGL2IsSupported ? gl2.FLOAT : gl.UNSIGNED_BYTE;
+    const type = gl.UNSIGNED_BYTE; //this.manager.webGL2IsSupported ? gl2.FLOAT : gl.UNSIGNED_BYTE;
 
     // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
     gl.texImage2D(
