@@ -17,6 +17,7 @@ export class FBO {
   protected textures: WebGLTexture[];
   protected write: number;
   protected read: number;
+  protected formatRGBA: any;
 
   /**
    * @param manager The FBO object needs to know the webGL manager
@@ -40,44 +41,61 @@ export class FBO {
   }
 
   protected createTexture(size: number[]): WebGLTexture {
-    this.manager.gl.activeTexture(this.manager.gl.TEXTURE0);
-    const texture = this.manager.gl.createTexture();
-    this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, texture);
-    this.manager.gl.texParameteri(
-      this.manager.gl.TEXTURE_2D,
-      this.manager.gl.TEXTURE_MAG_FILTER,
-      this.manager.gl.NEAREST,
+
+    const gl = this.manager.gl;
+    const gl2 = this.manager.gl as WebGL2RenderingContext;
+
+    gl.activeTexture(gl.TEXTURE0);
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(
+      gl.TEXTURE_2D,
+      gl.TEXTURE_MAG_FILTER,
+      gl.NEAREST,
     );
-    this.manager.gl.texParameteri(
-      this.manager.gl.TEXTURE_2D,
-      this.manager.gl.TEXTURE_MIN_FILTER,
-      this.manager.gl.NEAREST,
+    gl.texParameteri(
+      gl.TEXTURE_2D,
+      gl.TEXTURE_MIN_FILTER,
+      gl.NEAREST,
     );
-    this.manager.gl.texParameteri(
-      this.manager.gl.TEXTURE_2D,
-      this.manager.gl.TEXTURE_WRAP_S,
-      this.manager.gl.CLAMP_TO_EDGE,
+    gl.texParameteri(
+      gl.TEXTURE_2D,
+      gl.TEXTURE_WRAP_S,
+      gl.CLAMP_TO_EDGE,
     );
-    this.manager.gl.texParameteri(
-      this.manager.gl.TEXTURE_2D,
-      this.manager.gl.TEXTURE_WRAP_T,
-      this.manager.gl.CLAMP_TO_EDGE,
+    gl.texParameteri(
+      gl.TEXTURE_2D,
+      gl.TEXTURE_WRAP_T,
+      gl.CLAMP_TO_EDGE,
     );
 
+    const internalFormat = this.manager.webGL2IsSupported ? gl2.RGBA16F : gl.RGBA;
+
+    const format = gl.RGBA;
+
+    const type = this.manager.webGL2IsSupported ? gl2.FLOAT : gl.UNSIGNED_BYTE;
+
     // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
-    this.manager.gl.texImage2D(
-      this.manager.gl.TEXTURE_2D,
+    gl.texImage2D(
+      gl.TEXTURE_2D,
       0,
-      this.manager.gl.RGBA,
+      internalFormat,
       size[0],
       size[1],
       0,
-      this.manager.gl.RGBA,
-      this.manager.gl.FLOAT,
+      format,
+      type,
       null,
     );
-    this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, null);
+    gl.bindTexture(gl.TEXTURE_2D, null);
     return texture as WebGLTexture;
+  }
+
+  /**
+   * Inspired by: https://github.com/PavelDoGreat/WebGL-Fluid-Simulation/
+   */
+  protected checkRenderTextureFormatSupport() {
+
   }
 
   /**
