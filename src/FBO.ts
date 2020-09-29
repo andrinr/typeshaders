@@ -6,44 +6,55 @@
 
 import {Manager} from './Manager';
 
+export interface IFBOProps {
+  manager: Manager,
+  feedback?: boolean,
+  autoSwap?: boolean,
+  numberOfTextures?: number
+}
+
 /**
  * Creates a framebuffer object
  */
 export class FBO {
+
+  static defaultProperties: IFBOProps = {
+    manager: null,
+    feedback: false,
+    autoSwap: false,
+    numberOfTextures: 1
+  };
+
+  protected props: IFBOProps;
+
   frameBuffer: WebGLFramebuffer;
-  protected manager: Manager;
-  protected feedback: boolean;
-  protected autoSwap: boolean;
   protected textures: WebGLTexture[];
   protected write: number;
   protected read: number;
-  protected formatRGBA: any;
 
   /**
-   * @param manager The FBO object needs to know the webGL manager
-   * @param feedback When enabled there is a read and write texture which will enables texture feedback. Default is False.
-   * @param autoSwap Texture feedback requires swapping of the textures. Default is True.
    * Swap can be performed manually on the output function
+   * @param properties
    */
-  constructor(manager: Manager, feedback?: boolean, autoSwap?: boolean) {
-    this.manager = manager;
-    this.feedback = feedback || false;
-    this.autoSwap = autoSwap || true;
+  constructor(properties: IFBOProps) {
+
+    this.props = Object.assign({},FBO.defaultProperties,properties);
+
     this.write = 0;
     this.read = 1;
 
-    this.frameBuffer = this.manager.gl.createFramebuffer() as WebGLFramebuffer;
-    this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, this.frameBuffer);
+    this.frameBuffer = this.props.manager.gl.createFramebuffer() as WebGLFramebuffer;
+    this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
 
     this.textures = [this.createTexture([400, 400])];
 
-    if (this.feedback) this.textures.push(this.createTexture([400, 400]));
+    if (this.props.feedback) this.textures.push(this.createTexture([400, 400]));
   }
 
   protected createTexture(size: number[]): WebGLTexture {
 
-    const gl = this.manager.gl;
-    const gl2 = this.manager.gl as WebGL2RenderingContext;
+    const gl = this.props.manager.gl;
+    const gl2 = this.props.manager.gl as WebGL2RenderingContext;
 
     gl.activeTexture(gl.TEXTURE0);
     const texture = gl.createTexture();
@@ -69,11 +80,11 @@ export class FBO {
       gl.CLAMP_TO_EDGE,
     );
 
-    const internalFormat = this.manager.webGL2IsSupported ? gl2.RGBA16F : gl.RGBA;
+    const internalFormat = this.props.manager.webGL2IsSupported ? gl2.RGBA16F : gl.RGBA;
 
     const format = gl.RGBA;
 
-    const type = this.manager.webGL2IsSupported ? gl2.FLOAT : gl.UNSIGNED_BYTE;
+    const type = this.props.manager.webGL2IsSupported ? gl2.FLOAT : gl.UNSIGNED_BYTE;
 
     // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
     gl.texImage2D(
@@ -103,28 +114,28 @@ export class FBO {
    * Swapping is done after rendering the frame
    */
   update() {
-    this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, this.frameBuffer);
-    if (this.feedback) {
-      if (this.autoSwap && this.feedback) this.swap();
-      this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, this.textures[this.write]);
+    this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
+    if (this.props.feedback) {
+      if (this.props.autoSwap && this.props.feedback) this.swap();
+      this.props.manager.gl.bindTexture(this.props.manager.gl.TEXTURE_2D, this.textures[this.write]);
     }
   }
 
   /**
-   * Resize event called by the manager
+   * Resize event called by the props.manager
    */
   onResize(size: number[]) {
     /**
      * Copy texture and write it back after a resize event
      * This prevents data loss after rewriting since we have to create new textures with new sizes
      */
-    if (this.feedback) {
-      this.manager.copyRenderer.fragment.uniforms[0].source = () => this.output();
-      this.manager.copyRenderer.setSize(size);
-      this.manager.copyRenderer.onResize();
-      this.manager.copyRenderer.update();
-      this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, this.frameBuffer);
-      this.textures[this.write] = this.manager.copyRenderer.output;
+    if (this.props.feedback) {
+      this.props.manager.copyRenderer.fragment.uniforms[0].source = () => this.output();
+      this.props.manager.copyRenderer.setSize(size);
+      this.props.manager.copyRenderer.onResize();
+      this.props.manager.copyRenderer.update();
+      this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
+      this.textures[this.write] = this.props.manager.copyRenderer.output;
       this.textures[this.read] = this.createTexture(size);
     }
     /**
@@ -132,11 +143,11 @@ export class FBO {
      */
     else this.textures[this.write] = this.createTexture(size);
 
-    this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, this.frameBuffer);
-    this.manager.gl.framebufferTexture2D(
-      this.manager.gl.FRAMEBUFFER,
-      this.manager.gl.COLOR_ATTACHMENT0,
-      this.manager.gl.TEXTURE_2D,
+    this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
+    this.props.manager.gl.framebufferTexture2D(
+      this.props.manager.gl.FRAMEBUFFER,
+      this.props.manager.gl.COLOR_ATTACHMENT0,
+      this.props.manager.gl.TEXTURE_2D,
       this.textures[this.write],
       0,
     );
@@ -147,9 +158,9 @@ export class FBO {
    * @param swap If swap is true, textures are swapped before getting the current read texture
    */
   output(swap?: boolean): WebGLTexture {
-    if (swap && !this.autoSwap) this.swap();
+    if (swap && !this.props.autoSwap) this.swap();
 
-    if (!this.feedback) return this.textures[this.write];
+    if (!this.props.feedback) return this.textures[this.write];
     else return this.textures[this.read];
   }
 
@@ -159,10 +170,10 @@ export class FBO {
   swap() {
     this.write = ++this.write % 2;
     this.read = ++this.read % 2;
-    this.manager.gl.framebufferTexture2D(
-      this.manager.gl.FRAMEBUFFER,
-      this.manager.gl.COLOR_ATTACHMENT0,
-      this.manager.gl.TEXTURE_2D,
+    this.props.manager.gl.framebufferTexture2D(
+      this.props.manager.gl.FRAMEBUFFER,
+      this.props.manager.gl.COLOR_ATTACHMENT0,
+      this.props.manager.gl.TEXTURE_2D,
       this.textures[this.write],
       0,
     );

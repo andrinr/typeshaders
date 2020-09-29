@@ -50,7 +50,6 @@ export class Manager {
     if (!this.gl)
       throw new Error("WebGL not supported!");
 
-
     // bindings
     this.onResize = this.onResize.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
