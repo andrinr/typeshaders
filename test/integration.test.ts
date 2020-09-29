@@ -1,4 +1,4 @@
-import { EShaderTypes, Manager, Renderer, Scene, Shader } from '../src';
+import { EShaderTypes, FBO, Manager, Renderer, Scene, Shader } from '../src';
 
 test('Initialisation', () => {
   document.body.innerHTML =
@@ -9,14 +9,22 @@ test('Initialisation', () => {
 
   expect(manager.webGL2IsSupported).toBe(false);
 
-  const scene = new TestScene(manager);
+  new TestScene(manager);
 
-  //expect(manager.gl.getError()).toBe(manager.gl.NO_ERROR);
+  console.log(manager.gl.getError());
 });
 
 
 class TestScene extends Scene{
   start(){
+    const fbo = new FBO(
+      {
+        manager: this.manager,
+        feedback: true,
+        autoSwap: true,
+        outputTextures: 3
+      }
+    );
     this.renderers.push(
       new Renderer(
         {
@@ -42,7 +50,9 @@ class TestScene extends Scene{
             EShaderTypes.fragment,
             []
           ),
-          geo: this.manager.baseGeo
+          geo: this.manager.baseGeo,
+          fbo: fbo,
+          autoFeedback: true
         }
       )
     )

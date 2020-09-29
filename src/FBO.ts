@@ -10,7 +10,7 @@ export interface IFBOProps {
   manager: Manager,
   feedback?: boolean,
   autoSwap?: boolean,
-  numberOfTextures?: number
+  outputTextures?: number
 }
 
 /**
@@ -22,15 +22,18 @@ export class FBO {
     manager: null,
     feedback: false,
     autoSwap: false,
-    numberOfTextures: 1
+    outputTextures: 1
   };
 
   protected props: IFBOProps;
 
   frameBuffer: WebGLFramebuffer;
-  protected textures: WebGLTexture[];
+  protected textures: WebGLTexture[][];
   protected write: number;
   protected read: number;
+  protected drawBuffers: number[];
+  protected colorAttachments: number[];
+  protected drawBufferExtension: WEBGL_draw_buffers;
 
   /**
    * Swap can be performed manually on the output function
@@ -40,15 +43,70 @@ export class FBO {
 
     this.props = Object.assign({},FBO.defaultProperties,properties);
 
+
+    this.drawBuffers = [this.props.manager.gl.COLOR_ATTACHMENT0];
+    if (properties.outputTextures > 1){
+      this.drawBufferExtension = this.props.manager.gl.getExtension('WEBGL_draw_buffers');
+
+      this.colorAttachments = [
+        this.drawBufferExtension.COLOR_ATTACHMENT0_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT1_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT2_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT3_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT4_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT5_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT6_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT7_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT8_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT9_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT10_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT11_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT12_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT13_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT14_WEBGL,
+        this.drawBufferExtension.COLOR_ATTACHMENT15_WEBGL,
+      ];
+
+      this.drawBuffers = [
+        this.drawBufferExtension.DRAW_BUFFER0_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER1_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER2_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER3_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER4_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER5_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER6_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER7_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER8_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER9_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER10_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER11_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER12_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER13_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER14_WEBGL,
+        this.drawBufferExtension.DRAW_BUFFER15_WEBGL,
+      ];
+
+      this.drawBufferExtension.drawBuffersWEBGL(this.colorAttachments.slice(0,this.props.outputTextures));
+    }
+
+
     this.write = 0;
     this.read = 1;
 
     this.frameBuffer = this.props.manager.gl.createFramebuffer() as WebGLFramebuffer;
     this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
 
-    this.textures = [this.createTexture([400, 400])];
+    this.textures = [];
 
-    if (this.props.feedback) this.textures.push(this.createTexture([400, 400]));
+    for (let i = 0; i < this.props.outputTextures; i++){
+
+      if (this.props.feedback)
+        this.textures.push([this.createTexture([400, 400]), this.createTexture([400, 400])]);
+
+      else
+        this.textures.push([this.createTexture([400, 400])]);
+
+    }
   }
 
   protected createTexture(size: number[]): WebGLTexture {
@@ -130,27 +188,36 @@ export class FBO {
      * This prevents data loss after rewriting since we have to create new textures with new sizes
      */
     if (this.props.feedback) {
-      this.props.manager.copyRenderer.fragment.uniforms[0].source = () => this.output();
-      this.props.manager.copyRenderer.setSize(size);
-      this.props.manager.copyRenderer.onResize();
-      this.props.manager.copyRenderer.update();
-      this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
-      this.textures[this.write] = this.props.manager.copyRenderer.output;
-      this.textures[this.read] = this.createTexture(size);
+      for (let readWrite of this.textures){
+        this.props.manager.copyRenderer.props.fragment.uniforms[0].source = () => this.output();
+        this.props.manager.copyRenderer.setSize(size);
+        this.props.manager.copyRenderer.onResize();
+        this.props.manager.copyRenderer.update();
+        this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
+        readWrite[this.write] = this.props.manager.copyRenderer.output;
+        readWrite[this.read] = this.createTexture(size);
+      }
+
     }
     /**
      * If there is no feedback, no data can be lost
      */
-    else this.textures[this.write] = this.createTexture(size);
+    else {
+      for (let readWrite of this.textures) {
+        readWrite[this.write] = this.createTexture(size);
+      }
+    }
 
-    this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
-    this.props.manager.gl.framebufferTexture2D(
-      this.props.manager.gl.FRAMEBUFFER,
-      this.props.manager.gl.COLOR_ATTACHMENT0,
-      this.props.manager.gl.TEXTURE_2D,
-      this.textures[this.write],
-      0,
-    );
+    for (let i = 0; i< this.textures.length; i++){
+      this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
+      this.props.manager.gl.framebufferTexture2D(
+        this.props.manager.gl.FRAMEBUFFER,
+        this.drawBuffers[i],
+        this.props.manager.gl.TEXTURE_2D,
+        this.textures[i][this.write],
+        0,
+      );
+    }
   }
 
   /**

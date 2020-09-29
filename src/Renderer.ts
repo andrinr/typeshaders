@@ -28,7 +28,7 @@ export class Renderer {
     fragment: undefined,
     geo: undefined,
     fbo: undefined,
-    autoFeedback: false,
+    autoFeedback: true,
     clearColor: [0,0,0,1],
     fixedSize: undefined,
     iterations: 1
