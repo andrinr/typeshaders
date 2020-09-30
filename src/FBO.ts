@@ -25,7 +25,7 @@ export class FBO {
     outputTextures: 1
   };
 
-  protected props: IFBOProps;
+  public props: IFBOProps;
 
   frameBuffer: WebGLFramebuffer;
   protected textures: WebGLTexture[][];

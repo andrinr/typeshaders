@@ -22,7 +22,7 @@ export interface IRendererProps {
  * The render class creates a webgl program from a pair of shaders
  */
 export class Renderer {
-  props : IRendererProps;
+  public props : IRendererProps;
   static defaultProps : IRendererProps = {
     vertex: undefined,
     fragment: undefined,
@@ -100,10 +100,12 @@ export class Renderer {
 
       // feedback uniform
       if (this.props.fbo && this.props.autoFeedback) {
-        const location = this.manager.gl.getUniformLocation(this.program, 'feedback');
-        this.manager.gl.activeTexture(this.manager.gl.TEXTURE0);
-        this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, this.props.fbo.output());
-        this.manager.gl.uniform1i(location, 0);
+        for (let i = 0; i < this.props.fbo.props.outputTextures; i++){
+          const location = this.manager.gl.getUniformLocation(this.program, `uFeedback${i}`);
+          this.manager.gl.uniform1i(location, 0);
+          this.manager.gl.activeTexture(this.manager.gl.TEXTURE0 + i);
+          this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, this.props.fbo.output(i));
+        }
       }
 
       this.setShaderUniforms(this.props.vertex);
@@ -159,7 +161,7 @@ export class Renderer {
             break;
           case EUniformTypes.tex:
             gl.uniform1i(location, textInd);
-            gl.activeTexture(gl.TEXTURE0 + textInd++);
+            gl.activeTexture(gl.TEXTURE0 + this.props.fbo.props.outputTextures + textInd++);
             gl.bindTexture(gl.TEXTURE_2D, source);
             break;
         }
