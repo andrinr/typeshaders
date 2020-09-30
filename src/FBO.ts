@@ -222,13 +222,14 @@ export class FBO {
 
   /**
    * Access current read texture, since output is called after update
+   * @param index
    * @param swap If swap is true, textures are swapped before getting the current read texture
    */
-  output(swap?: boolean): WebGLTexture {
+  output(index?: number, swap?: boolean): WebGLTexture {
     if (swap && !this.props.autoSwap) this.swap();
 
-    if (!this.props.feedback) return this.textures[this.write];
-    else return this.textures[this.read];
+    if (!this.props.feedback) return this.textures[index | 0 ][this.write];
+    else return this.textures[index | 0][this.read];
   }
 
   /**
