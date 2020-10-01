@@ -43,7 +43,6 @@ export class FBO {
 
     this.props = Object.assign({},FBO.defaultProperties,properties);
 
-
     this.drawBuffers = [this.props.manager.gl.COLOR_ATTACHMENT0];
     if (properties.outputTextures > 1){
       this.drawBufferExtension = this.props.manager.gl.getExtension('WEBGL_draw_buffers');

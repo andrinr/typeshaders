@@ -3,10 +3,25 @@ import {Geo} from './Geo';
 import {Renderer} from './Renderer';
 import {Scene} from './Scene';
 
+export interface IManagerProps{
+  divName: string,
+  tryWebGL2?: boolean,
+  webGlAttributes?: WebGLContextAttributes
+}
 /**
  * The manager controls the scene and initiates the webgl rendering context
  */
 export class Manager {
+
+  protected static defaultProperties: IManagerProps = {
+    divName : '',
+    tryWebGL2: true,
+    webGlAttributes : {
+      alpha: false, depth: false, stencil: false, antialias: false
+    }
+  };
+  protected props : IManagerProps;
+
   canvasElement: HTMLCanvasElement;
   gl: WebGLRenderingContext;
 
@@ -16,10 +31,13 @@ export class Manager {
   copyRenderer: Renderer;
 
   webGL2IsSupported : boolean;
+  floatTextureExtension: OES_texture_float;
+  drawBufferExtension: WEBGL_draw_buffers;
 
   protected prevMousePos: number[];
   protected active: boolean;
   protected startTime: number;
+
 
   protected scene: Scene;
 
@@ -27,8 +45,10 @@ export class Manager {
    * @param divName Requires the name of the canvas gl object in order to access it
    * @param shaderRoot Root of shader files. Use .glsl
    */
-  constructor(divName: string) {
-    this.canvasElement = document.getElementById(divName) as HTMLCanvasElement;
+  constructor(properties) {
+    this.props = Object.assign({},Manager.defaultProperties,properties);
+
+    this.canvasElement = document.getElementById(this.props.divName) as HTMLCanvasElement;
     this.active = true;
     const params = { alpha: false, depth: false, stencil: false, antialias: false };
 
@@ -36,12 +56,13 @@ export class Manager {
     this.webGL2IsSupported = true;
 
     // Fallback 1, webgl1
-    if (!this.gl){
+    if (!this.gl || !this.props.tryWebGL2){
       this.gl = this.canvasElement.getContext('webgl', params) as WebGLRenderingContext;
       this.webGL2IsSupported = false;
 
       // https://developer.mozilla.org/en-US/docs/Web/API/OES_texture_float
-      this.gl.getExtension('OES_texture_float');
+      this.floatTextureExtension = this.gl.getExtension('OES_texture_float');
+      this.drawBufferExtension = this.gl.getExtension('WEBGL_draw_buffers');
     }
 
     this.gl.getExtension('EXT_color_buffer_float');
