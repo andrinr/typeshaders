@@ -167,7 +167,7 @@ export class FBO {
     this.props.manager.gl.bindFramebuffer(this.props.manager.gl.FRAMEBUFFER, this.frameBuffer);
     if (this.props.feedback) {
       if (this.props.autoSwap && this.props.feedback) this.swap();
-      this.props.manager.gl.bindTexture(this.props.manager.gl.TEXTURE_2D, this.textures[this.write]);
+      // this.props.manager.gl.bindTexture(this.props.manager.gl.TEXTURE_2D, this.textures[this.write]);
     }
   }
 
