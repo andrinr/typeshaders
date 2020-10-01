@@ -51,11 +51,12 @@ export class Manager {
     this.canvasElement = document.getElementById(this.props.canvasID) as HTMLCanvasElement;
     this.active = true;
 
-    this.gl = this.canvasElement.getContext('webgl2', this.props.webGlAttributes) as WebGL2RenderingContext;
-    this.webGL2IsSupported = true;
-
+    if (this.props.tryWebGL2){
+      this.gl = this.canvasElement.getContext('webgl2', this.props.webGlAttributes) as WebGL2RenderingContext;
+      this.webGL2IsSupported = true;
+    }
     // Fallback 1, webgl1
-    if (!this.gl || !this.props.tryWebGL2){
+    if (!this.gl){
       this.gl = this.canvasElement.getContext('webgl', this.props.webGlAttributes) as WebGLRenderingContext;
 
       this.webGL2IsSupported = false;
