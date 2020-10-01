@@ -1,10 +1,15 @@
 # typeshaders
 
-Easy WebGL shader playground in Typescript.
+Easy WebGL shader playground in Typescript with WEbGL 1.0 support.
 
 ## State of the project
 This project is still in early stages, 
 and there will be major changes and added examples in the future.
+
+### Roadmap:
+
+- Enable Multi Texture Outputs with WebGL1.0 -> branch: "multi-texture", currently on npm as typeshaders@beta
+
 
 ## Get started
 
