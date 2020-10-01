@@ -50,28 +50,24 @@ export class Manager {
 
     this.canvasElement = document.getElementById(this.props.canvasID) as HTMLCanvasElement;
     this.active = true;
-    const params = { alpha: false, depth: false, stencil: false, antialias: false };
 
-    this.gl = this.canvasElement.getContext('webgl2', params) as WebGL2RenderingContext;
+    this.gl = this.canvasElement.getContext('webgl2', this.props.webGlAttributes) as WebGL2RenderingContext;
     this.webGL2IsSupported = true;
 
     // Fallback 1, webgl1
     if (!this.gl || !this.props.tryWebGL2){
-      this.gl = this.canvasElement.getContext('webgl', params) as WebGLRenderingContext;
+      this.gl = this.canvasElement.getContext('webgl', this.props.webGlAttributes) as WebGLRenderingContext;
 
-      if (this.gl === null){
-        throw new Error('WebGL is not supported');
-      }
       this.webGL2IsSupported = false;
 
       // https://developer.mozilla.org/en-US/docs/Web/API/OES_texture_float
-      this.floatTextureExtension = this.gl.getExtension('OES_texture_float');
-      this.drawBufferExtension = this.gl.getExtension('WEBGL_draw_buffers');
+      this.floatTextureExtension = this.gl.getExtension('OES_texture_float') as OES_texture_float;
+      this.drawBufferExtension = this.gl.getExtension('WEBGL_draw_buffers') as WEBGL_draw_buffers;
     }
 
     this.gl.getExtension('EXT_color_buffer_float');
 
-    // Throw error when to webgl is supported
+    // Throw error when to webgl is not supported
     if (!this.gl)
       throw new Error("WebGL not supported!");
 
