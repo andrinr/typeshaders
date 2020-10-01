@@ -11,7 +11,7 @@ export interface IManagerProps{
 /**
  * The manager controls the scene and initiates the webgl rendering context
  */
-export class Manager {
+export class ShaderAnimation {
 
   protected static defaultProperties: IManagerProps = {
     canvasID : '',
@@ -46,7 +46,7 @@ export class Manager {
    * @param shaderRoot Root of shader files. Use .glsl
    */
   constructor(properties) {
-    this.props = Object.assign({},Manager.defaultProperties,properties);
+    this.props = Object.assign({},ShaderAnimation.defaultProperties,properties);
 
     this.canvasElement = document.getElementById(this.props.canvasID) as HTMLCanvasElement;
     this.active = true;

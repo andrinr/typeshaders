@@ -3,7 +3,7 @@
  * Andrin Rehmann 2020
  */
 import {Renderer} from './Renderer';
-import {Manager} from './Manager';
+import {ShaderAnimation} from './ShaderAnimation';
 
 export interface ITime {
   frameCount: number;
@@ -27,9 +27,9 @@ export class Scene {
   time: ITime;
   dimensions: IDimensions;
 
-  protected manager: Manager;
+  protected manager: ShaderAnimation;
 
-  constructor(manager: Manager) {
+  constructor(manager: ShaderAnimation) {
     this.manager = manager;
     this.renderers = [];
     this.manager.set(this);

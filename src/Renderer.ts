@@ -5,7 +5,7 @@
 import {Geo} from './Geo';
 import {Shader, EShaderTypes, EUniformTypes } from './Shader';
 import {FBO} from './FBO';
-import {Manager} from './Manager';
+import {ShaderAnimation} from './ShaderAnimation';
 
 export interface IRendererProps {
   vertex: Shader;
@@ -34,7 +34,7 @@ export class Renderer {
     iterations: 1
   };
 
-  protected manager: Manager;
+  protected manager: ShaderAnimation;
   protected program: WebGLProgram;
 
 
@@ -54,9 +54,9 @@ export class Renderer {
   }
 
   /**
-   * Called by the Manager class
+   * Called by the ShaderAnimation class
    */
-  public initialize(manager: Manager, usesFBO: boolean): Renderer {
+  public initialize(manager: ShaderAnimation, usesFBO: boolean): Renderer {
     this.manager = manager;
 
     this.props.vertex.compileShader(this.manager.gl);
@@ -90,6 +90,7 @@ export class Renderer {
 
     for (let i = 0; i < this.props.iterations; i++) {
       // the framebuffer null is the canvas object
+      for (let j = 0; j < this.props.fbo.props.outputTextures; j++){
       if (!this.props.fbo) this.manager.gl.bindFramebuffer(this.manager.gl.FRAMEBUFFER, null);
       else this.props.fbo.update();
 

@@ -1,11 +1,11 @@
-import { EShaderTypes, FBO, Manager, Renderer, Scene, Shader } from '../src';
+import { EShaderTypes, FBO, ShaderAnimation, Renderer, Scene, Shader } from '../src';
 
 test('Initialisation', () => {
   document.body.innerHTML =
     '<canvas id="canvasID">' +
     '</canvas>';
 
-  const manager = new Manager({
+  const manager = new ShaderAnimation({
     canvasID: 'canvasID'
   });
 

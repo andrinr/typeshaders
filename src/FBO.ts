@@ -3,11 +3,11 @@
  * Andrin Rehmann 2020
  *
  */
-import { Manager } from './Manager';
+import { ShaderAnimation } from './ShaderAnimation';
 
 
 export interface IFBOProps {
-  manager: Manager,
+  manager: ShaderAnimation,
   feedback?: boolean,
   autoSwap?: boolean,
   outputTextures?: number

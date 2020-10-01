@@ -23,13 +23,13 @@ The shader will be rendered on this canvas.
 
 #### 2. Create a new manager
 
-Pass the custom id to the ``Manager``.
+Pass the custom id to the ``ShaderAnimation``.
 
-The ``Manager`` function will handle the animation frames, as well as the ``Scene``
+The ``ShaderAnimation`` function will handle the animation frames, as well as the ``Scene``
 and its corresponding ``Renderer``'s. 
 
 ````typescript
-const manager = new Manager("canvasID");
+const manager = new ShaderAnimation("canvasID");
 ````
 
 #### 3. Create a new Scene
