@@ -5,7 +5,9 @@ test('Initialisation', () => {
     '<canvas id="canvasID">' +
     '</canvas>';
 
-  const manager = new Manager('canvasID');
+  const manager = new Manager({
+    canvasID: 'canvasID'
+  });
 
   expect(manager.webGL2IsSupported).toBe(false);
 

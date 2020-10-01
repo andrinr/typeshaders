@@ -4,7 +4,7 @@ import {Renderer} from './Renderer';
 import {Scene} from './Scene';
 
 export interface IManagerProps{
-  divName: string,
+  canvasID: string,
   tryWebGL2?: boolean,
   webGlAttributes?: WebGLContextAttributes
 }
@@ -14,7 +14,7 @@ export interface IManagerProps{
 export class Manager {
 
   protected static defaultProperties: IManagerProps = {
-    divName : '',
+    canvasID : '',
     tryWebGL2: true,
     webGlAttributes : {
       alpha: false, depth: false, stencil: false, antialias: false
@@ -48,7 +48,7 @@ export class Manager {
   constructor(properties) {
     this.props = Object.assign({},Manager.defaultProperties,properties);
 
-    this.canvasElement = document.getElementById(this.props.divName) as HTMLCanvasElement;
+    this.canvasElement = document.getElementById(this.props.canvasID) as HTMLCanvasElement;
     this.active = true;
     const params = { alpha: false, depth: false, stencil: false, antialias: false };
 
@@ -58,6 +58,10 @@ export class Manager {
     // Fallback 1, webgl1
     if (!this.gl || !this.props.tryWebGL2){
       this.gl = this.canvasElement.getContext('webgl', params) as WebGLRenderingContext;
+
+      if (this.gl === null){
+        throw new Error('WebGL is not supported');
+      }
       this.webGL2IsSupported = false;
 
       // https://developer.mozilla.org/en-US/docs/Web/API/OES_texture_float
