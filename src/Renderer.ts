@@ -100,11 +100,11 @@ export class Renderer {
 
       // feedback uniform
       if (this.props.fbo && this.props.autoFeedback) {
-        for (let i = 0; i < this.props.fbo.props.outputTextures; i++){
-          const location = this.manager.gl.getUniformLocation(this.program, `uFeedback${i}`);
+        for (let j = 0; j < this.props.fbo.props.outputTextures; j++){
+          const location = this.manager.gl.getUniformLocation(this.program, `uFeedback${j}`);
           this.manager.gl.uniform1i(location, 0);
-          this.manager.gl.activeTexture(this.manager.gl.TEXTURE0 + i);
-          this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, this.props.fbo.output(i));
+          this.manager.gl.activeTexture(this.manager.gl.TEXTURE0 + j);
+          this.manager.gl.bindTexture(this.manager.gl.TEXTURE_2D, this.props.fbo.output(j));
         }
       }
 

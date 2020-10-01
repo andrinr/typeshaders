@@ -3,8 +3,8 @@
  * Andrin Rehmann 2020
  *
  */
+import { Manager } from './Manager';
 
-import {Manager} from './Manager';
 
 export interface IFBOProps {
   manager: Manager,
@@ -160,13 +160,6 @@ export class FBO {
   }
 
   /**
-   * Inspired by: https://github.com/PavelDoGreat/WebGL-Fluid-Simulation/
-   */
-  protected checkRenderTextureFormatSupport() {
-
-  }
-
-  /**
    * Update the FBO, usually done after/before one frame
    * Swapping is done after rendering the frame
    */
@@ -187,7 +180,7 @@ export class FBO {
      * This prevents data loss after rewriting since we have to create new textures with new sizes
      */
     if (this.props.feedback) {
-      for (let readWrite of this.textures){
+      for (const readWrite of this.textures){
         this.props.manager.copyRenderer.props.fragment.uniforms[0].source = () => this.output();
         this.props.manager.copyRenderer.setSize(size);
         this.props.manager.copyRenderer.onResize();
@@ -202,7 +195,7 @@ export class FBO {
      * If there is no feedback, no data can be lost
      */
     else {
-      for (let readWrite of this.textures) {
+      for (const readWrite of this.textures) {
         readWrite[this.write] = this.createTexture(size);
       }
     }
@@ -227,8 +220,8 @@ export class FBO {
   output(index?: number, swap?: boolean): WebGLTexture {
     if (swap && !this.props.autoSwap) this.swap();
 
-    if (!this.props.feedback) return this.textures[index | 0 ][this.write];
-    else return this.textures[index | 0][this.read];
+    if (!this.props.feedback) return this.textures[index || 0 ][this.write];
+    else return this.textures[index || 0][this.read];
   }
 
   /**
