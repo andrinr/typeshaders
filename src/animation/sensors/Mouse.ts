@@ -1,6 +1,6 @@
 import Victor = require('victor');
 import { Sensor } from './Sensor';
-import AnimationManager from '../AnimationManager';
+import Manager from '../Manager';
 
 export interface IMouse {
   pos: Victor,
@@ -11,7 +11,7 @@ export class Mouse extends Sensor{
   data : IMouse;
   prevPos : Victor;
 
-  constructor(animation: AnimationManager)
+  constructor(animation: Manager)
   {
     super(animation);
     this.data = {
@@ -37,6 +37,6 @@ export class Mouse extends Sensor{
     this.data.vel.zero().add(this.data.pos).subtract(this.prevPos);
     this.prevPos.zero().add(this.data.pos);
 
-    this.update();
+    this.notify();
   }
 }

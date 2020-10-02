@@ -1,23 +1,24 @@
 /**
  * The manager controls the scene and initiates the webgl rendering context
  */
-import AnimationElement from './AnimationElement';
-import AnimationTime from './AnimationTime';
+import Element from './Element';
+import Time from './Time';
+import Victor = require('victor');
 
 export interface IDimensions {
-    size: number[],
+    size: Victor,
     aspectRatio: number
 }
 
-export default class AnimationManager {
+export default class Manager {
     canvasElement: HTMLCanvasElement;
 
-    protected elements: Map<string,AnimationElement> = new Map();
+    protected elements: Map<string, Element> = new Map();
 
     protected active: boolean;
 
     public dimensions: IDimensions;
-    public time: AnimationTime;
+    public time: Time;
 
     protected onPause: boolean;
 
@@ -38,32 +39,18 @@ export default class AnimationManager {
         // event listeners
         window.addEventListener('resize', this.onResize);
 
-        this.time = new AnimationTime();
+        this.time = new Time();
 
         // init dimensions
         this.dimensions = {
-            size: [this.canvasElement.width, this.canvasElement.height],
+            size: new Victor(this.canvasElement.width, this.canvasElement.height),
             aspectRatio: this.canvasElement.width / this.canvasElement.height
         };
         // start animation
         this.init();
     }
 
-    requestDeviceOrientationIOS() {
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-            DeviceOrientationEvent.requestPermission()
-                .then(response => {
-                    if (response == 'granted') {
-                        this.addOrientationEventListener();
-                    }
-                })
-                .catch(console.error)
-        } else {
-            this.addOrientationEventListener();
-        }
-    }
-
-    setElement(element: AnimationElement, hash: string){
+    setElement(element: Element, hash: string){
         // Basic vertex shader which simply passes the vertices to the fragment shader
         this.elements.set(hash,element);
         this.elements.get(hash).start();
@@ -77,7 +64,6 @@ export default class AnimationManager {
         this.elements.delete(hash);
     }
 
-
     init() {
         this.run();
     }
@@ -85,24 +71,25 @@ export default class AnimationManager {
     run() {
         this.time.update();
 
-        for (const key of this.elements.keys()){
-            if (!this.elements.get(key).isInGame){
+        this.elements.forEach(
+          (value, key) => {
+            if (!value.isInGame){
                 this.elements.delete(key);
             }
-            this.elements.get(key).update();
-        }
+            else{
+                value.update();
+            }
+          }
+        );
 
         if (this.active)
             window.requestAnimationFrame(this.run);
     }
 
     onResize() {
-
-        this.dimensions = {
-            size: [document.documentElement.clientWidth, document.documentElement.clientHeight],
-            aspectRatio: document.documentElement.clientWidth / document.documentElement.clientHeight
-        };
-
+        this.dimensions.size.x = document.documentElement.clientWidth;
+        this.dimensions.size.y = document.documentElement.clientHeight;
+        this.dimensions.aspectRatio = document.documentElement.clientWidth / document.documentElement.clientHeight;
         this.canvasElement.width = document.documentElement.clientWidth;
         this.canvasElement.height = document.documentElement.clientHeight;
     }

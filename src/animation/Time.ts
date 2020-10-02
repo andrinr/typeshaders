@@ -1,7 +1,7 @@
 /**
  * Currently kinda hacky, needs to be adjusted if time played needs to be known
  */
-export default class AnimationTime{
+export default class Time{
     frameCount: number;
     milliSeconds: number;
     delta: number;

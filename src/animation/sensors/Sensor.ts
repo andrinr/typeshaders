@@ -1,12 +1,12 @@
-import AnimationManager from '../AnimationManager';
+import Manager from '../Manager';
 
 export class Sensor {
 
-  animation: AnimationManager;
+  animation: Manager;
   data: any;
   callbacks : { (data: any): void; } [];
 
-  constructor(animation : AnimationManager) {
+  constructor(animation : Manager) {
     this.animation = animation;
   }
 
@@ -14,7 +14,7 @@ export class Sensor {
     this.callbacks.push(callback)
   }
 
-  protected update(){
+  protected notify(){
     for (let callback of this.callbacks){
       callback(this.data);
     }

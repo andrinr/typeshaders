@@ -1,5 +1,5 @@
 import { Sensor } from './Sensor';
-import AnimationManager from '../AnimationManager';
+import Manager from '../Manager';
 
 export interface IOrientation {
   beta: number;
@@ -10,7 +10,7 @@ export interface IOrientation {
 export class Orientation extends Sensor{
   data : IOrientation;
 
-  constructor(animation: AnimationManager)
+  constructor(animation: Manager)
   {
     super(animation);
     this.data = {
@@ -41,13 +41,13 @@ export class Orientation extends Sensor{
       window.addEventListener("deviceorientation", (event) => {
         this.data.beta = event.beta;
         this.data.gamma = event.gamma;
-        this.update()
+        this.notify()
       }, true);
     } else if (window.DeviceMotionEvent) {
       window.addEventListener('devicemotion', (event) => {
         this.data.beta = event.acceleration.x * 2;
         this.data.gamma = event.acceleration.y * 2;
-        this.update();
+        this.notify();
       }, true);
     } else {
       window.addEventListener("MozOrientation", (event) => {
@@ -55,7 +55,7 @@ export class Orientation extends Sensor{
         this.data.beta = event.x * 50;
         // @ts-ignore
         this.data.gamma = event.y * 50;
-        this.update();
+        this.notify();
       }, true);
     }
   }
