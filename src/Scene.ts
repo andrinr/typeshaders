@@ -19,11 +19,10 @@ export interface IDimensions {
 /**
  * The parent class for all scenes
  */
-export class Scene {
+export abstract class Scene {
   /**
    *  renderers[n-1] is the default renderer which renders to the canvas, all others will render to a fbo
    */
-  renderers: Renderer[];
   time: ITime;
   dimensions: IDimensions;
 
@@ -31,12 +30,14 @@ export class Scene {
 
   constructor(manager: ShaderAnimation) {
     this.manager = manager;
-    this.renderers = [];
     this.manager.set(this);
   }
 
   /* tslint:disable:no-empty */
   start() {}
+
+  /* tslint:disable:no-empty */
+  private updateDev() {}
 
   /* tslint:disable:no-empty */
   update() {}

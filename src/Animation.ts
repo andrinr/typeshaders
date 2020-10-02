@@ -1,6 +1,21 @@
 import {Scene} from './Scene';
+import Victor = require('victor');
 
+export interface ITime {
+  frameCount: number;
+  milliSeconds: number;
+  delta: number;
+}
 
+export interface IDimensions {
+  size: Victor;
+  aspectRatio: number;
+}
+
+interface IAnimationContext {
+  mouse: Victor,
+  time: ITime,
+}
 /**
  * The Animation class handles frame animation and simple interaction Events
  */

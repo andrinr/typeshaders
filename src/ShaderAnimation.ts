@@ -42,8 +42,7 @@ export class ShaderAnimation {
   protected scene: Scene;
 
   /**
-   * @param divName Requires the name of the canvas gl object in order to access it
-   * @param shaderRoot Root of shader files. Use .glsl
+   * @param properties
    */
   constructor(properties) {
     this.props = Object.assign({},ShaderAnimation.defaultProperties,properties);

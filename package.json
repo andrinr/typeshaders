@@ -43,7 +43,9 @@
   },
   "homepage": "https://github.com/andrinr/typeshaders#readme",
   "dependencies": {
-    "@types/webgl2": "0.0.5"
+    "@types/victor": "^1.1.0",
+    "@types/webgl2": "0.0.5",
+    "victor": "^1.1.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.5",
